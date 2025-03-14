@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Buy Package</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <section class="buy-section">
+    <div class="buy-heading">
+      <h1>Complete Your Purchase</h1>
+      <p>Choose your destination and book your package now!</p>
+      <h2 id="userInfo">Welcome, Guest</h2>
+      <button onclick="handleLogout()">Logout</button>
+    </div>
+
+    <form class="buy-form" onsubmit="handleBooking(event)">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+
+      <label for="email">Email Address:</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+      <label for="destination">Select Destination:</label>
+      <select id="destination" name="destination" required>
+        <option value="Goa">Goa</option>
+        <option value="Kashmir">Kashmir</option>
+        <option value="Shimla">Shimla</option>
+        <option value="Ladakh">Ladakh</option>
+        <option value="Amritsar">Amritsar</option>
+        <option value="Udaipur">Udaipur</option>
+        <option value="Jaipur">Jaipur</option>
+      </select>
+
+      <label for="quantity">Number of Travelers:</label>
+      <input type="number" id="quantity" name="quantity" min="1" placeholder="Enter number of travelers" required>
+
+      <button type="submit" class="buy-submit">Book Now</button>
+    </form>
+  </section>
+
+  <footer>
+    <div class="footer-content">
+      <p>Copyright © 2024 Holiday Hub All Rights Reserved.<br>
+        Website developed by: Kareliya Sohil, Veer Bhalodia, Yash Khanpara</p>
+    </div>
+  </footer>
+
+  <script>
+    // Fetch User Profile to Display Name
+    async function fetchUserProfile() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('You are not logged in!');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const response = await fetch('http://localhost:5000/api/auth/profile', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        document.getElementById('userInfo').innerText = `Welcome, ${data.user.name}`;
+        document.getElementById('name').value = data.user.name;
+        document.getElementById('email').value = data.user.email;
+      } else {
+        alert(data.message || 'Failed to fetch user data');
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+      }
+    }
+
+    // Logout Function
+    function handleLogout() {
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    }
+
+    // Handle Booking Submission
+    function handleBooking(event) {
+      event.preventDefault();
+      const destination = document.getElementById('destination').value;
+      const quantity = document.getElementById('quantity').value;
+
+      alert(`Booking confirmed for ${quantity} traveler(s) to ${destination}!`);
+      window.location.href = 'payment.html';
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchUserProfile);
+  </script>
+
+</body>
+
+</html>

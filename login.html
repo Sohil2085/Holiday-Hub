@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>Holiday Hub - Login</title>
+  <link rel="icon" href="./files/logo.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Paytone+One&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: rgba(0, 0, 0, 0.6);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-container {
+      background-color: white;
+      padding: 40px 30px;
+      border-radius: 10px;
+      width: 350px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Login Container -->
+  <div class="login-container">
+    <h2>Login to Your Account</h2>
+    <form onsubmit="handleLogin(event)">
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+  
+    <!-- Sign Up Link -->
+    <p class="signup-text">
+      Don't have an account? <a href="signup.html">Sign up here</a>
+    </p>
+  
+    <div class="footer">Copyright © 2024 Holiday Hub | All Rights Reserved.</div>
+  </div>
+  
+  <script>
+    async function handleLogin(event) {
+      event.preventDefault(); // Prevent page refresh
+  
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+  
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        alert('Login successful!');
+        window.location.href = 'index.html';
+      } else {
+        // Redirect to signup page if invalid credentials
+        alert(data.message || 'User does not exist. Redirecting to sign-up...');
+        window.location.href = 'signup.html';
+      }
+    }
+  
+    // Redirect to index if already logged in
+    const token = localStorage.getItem('token');
+    if (token) {
+      window.location.href = 'index.html';
+    }
+  </script>
+  
+  <style>
+    .signup-text {
+      margin-top: 10px;
+      font-size: 14px;
+      color: white;
+      text-align: center;
+    }
+  
+    .signup-text a {
+      color: #4CAF50;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  
+    .signup-text a:hover {
+      text-decoration: underline;
+    }
+  </style>
+  
+</body>
+
+</html>
